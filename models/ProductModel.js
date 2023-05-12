@@ -1,4 +1,13 @@
 import mongoose from "mongoose";
+import Review from "./ReviewModel";
+const imageSchema = mongoose.Schema({
+    path: {
+        type: String,
+        required: true,
+    },
+})
+
+
 const { Schema, model } = mongoose;
 
 const ProductSchema = new Schema(
@@ -54,14 +63,15 @@ const ProductSchema = new Schema(
       },
     ],
 
-    images: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    images: [imageSchema],
 
-    reviews: [],
+    reviews: [{
+      
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Review,
+    }
+
+    ],
   },
 
   {
@@ -70,6 +80,12 @@ const ProductSchema = new Schema(
   }
 );
 
-ProductSchema.index();
+
 const Product = model("Product", ProductSchema);
+
+// Compound index
+
+ProductSchema.index({name:"text", description: "text"}, {name:"TextIndex"});
+ProductSchema.index({"attrs.key":1, "attrs.value":1})
+
 export default Product;
