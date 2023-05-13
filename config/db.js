@@ -1,6 +1,9 @@
 useUnifiedTopology: true; // allow the usage of MongoDB driver's new connection management engine (ex: how much time to try to connect before erroring out?)
 
 import mongoose from "mongoose"; 
+import dotenv from "dotenv";
+dotenv.config();
+
 const connectDB = async () => {
   try {
     mongoose.set("strictQuery", false);

@@ -14,15 +14,22 @@ const CategorySchema = new Schema(
       required: true,
     },
 
+    image: { 
+      type: String,
+
+    },
+
     attrs: [
       {
         key: {
           type: String,
         },
 
-        value: [{
-          type: String,
-        }],
+        value: [
+          {
+            type: String,
+          },
+        ],
       },
     ],
   },
@@ -32,6 +39,8 @@ const CategorySchema = new Schema(
     timestamps: true,
   }
 );
+
+CategorySchema.index({ description: 1 });
 
 const Category = model("Category", CategorySchema);
 export default Category;

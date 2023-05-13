@@ -1,30 +1,30 @@
 import mongoose from "mongoose";
-import User from "./UserModel";
+import User from "./UserModel.js";
 const { Schema, model } = mongoose;
 
 const OrderSchema = new Schema(
   {
     user: {
-      _id: {
+      
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: User,
-      },
+      
     },
 
-    Order: {
+    OrderTotal: {
       itemsCount: {
         type: Number,
-        required: true,
+        // required: true,
       },
 
-      cartSubTotal: {
+      cartSubtotal: {
         type: Number,
-        required: true,
+        // required: true,
       },
     },
 
-    cartItem: [
+    cartItems: [
       {
         name: {
           type: String,
