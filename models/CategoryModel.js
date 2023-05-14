@@ -12,6 +12,7 @@ const CategorySchema = new Schema(
     description: {
       type: String,
       required: true,
+      default: "category-3Ha"
     },
 
     image: { 

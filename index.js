@@ -25,6 +25,28 @@ app.get("/", (req, res) => {
 
 app.use('/api', apiRoutes)
 
+
+// Error handlers
+
+app.use((error, req, res, next) => {
+  console.error(error);
+  next(error);
+})
+
+app.use((error, req, res, next) => {
+  res.status(500).json({
+    message: error.message,
+    stack: error.stack,
+  });
+});
+
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500).send({
+    success: false,
+    message: err.message,
+  });
+});
+
 app.listen(
   PORT,
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)

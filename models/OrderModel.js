@@ -15,12 +15,12 @@ const OrderSchema = new Schema(
     OrderTotal: {
       itemsCount: {
         type: Number,
-        // required: true,
+        required: true,
       },
 
       cartSubtotal: {
         type: Number,
-        // required: true,
+        required: true,
       },
     },
 
