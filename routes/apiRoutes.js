@@ -6,7 +6,7 @@ import userRoutes from "./userRoutes.js";
 import orderRoutes from "./orderRoutes.js";
 // router.put("/block/:id", authMiddleware, isAdmin, authControllers.blockUser);
 
-app.use('/product', productRoutes)
+app.use('/products', productRoutes)
 app.use('/categories', categoryRoutes)
 app.use('/users', userRoutes)
 app.use("/orders", orderRoutes);

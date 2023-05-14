@@ -1,7 +1,21 @@
-import Product from "../models/ProductModel.js"
+import Product from "../models/ProductModel.js";
+import recordsPerPage from "../config/pagination.js";
 
-const getProduct = (req, res) => {
-    res.send("Hello to our products")
-}
+// Get All The Products
 
-export default getProduct
+const getProducts = async (req, res, next) => {
+  try {
+    const pageNum =Number(req.query.pageNum) || 1
+    const totalProducts = await Product.countDocuments({})
+    const products = await Product.find({})
+      .skip(recordsPerPage * (pageNum - 1))
+      .sort({ name: 1 })
+      .limit(recordsPerPage);
+    res.json({ products, pageNum, paginationLinksNumber: Math.ceil(totalProducts / recordsPerPage) 
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { getProducts };

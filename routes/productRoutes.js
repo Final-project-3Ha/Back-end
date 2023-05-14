@@ -1,8 +1,11 @@
 import express from "express";
 const router = express.Router();
-import getProduct from "../controllers/ProductController.js"
+import productController from "../controllers/ProductController.js";
 
-router.get("/", getProduct)
+router.get("/", productController.getProducts);
+// router.post("/", productController.newCategory)
+// router.delete("/:category", productController.deleteCategory);
+// router.post("/attr", productController.saveAttr);
 
 export default router;
 
