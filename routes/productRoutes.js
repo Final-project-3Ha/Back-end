@@ -14,6 +14,7 @@ router.get("/bestsellers", productController.getBestsellers);
 
 router.get("/admin", productController.adminGetProducts);
 router.delete("/admin/:id", productController.adminDeleteProduct);
+router.delete("/admin/image/:imagePath/:productId", productController.adminDeleteProductImage);
 router.post("/admin", productController.adminCreateProduct);
 router.post("/admin/upload", productController.adminUpload);
 router.put("/admin/:id", productController.adminUpdateProduct);

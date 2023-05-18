@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
-app.use(fileUpload);
+app.use(fileUpload ());
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
