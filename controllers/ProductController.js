@@ -1,6 +1,6 @@
 import Product from "../models/ProductModel.js";
 import recordsPerPage from "../config/pagination.js";
-import { request } from "express";
+import { request, response } from "express";
 
 // Get All The Products
 
@@ -81,7 +81,6 @@ const getProducts = async (req, res, next) => {
     if (sortOption) {
       let sortOpt = sortOption.split("_");
       sort = { [sortOpt[0]]: Number(sortOpt[1]) };
-      
     }
 
     // sort products through search Box
@@ -128,13 +127,159 @@ const getProducts = async (req, res, next) => {
 
 // Get Product By ID
 
-const getProductById = async(req, res, next) => {
+const getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).populate ("reviews").orFail()
+    const product = await Product.findById(req.params.id)
+      .populate("reviews")
+      .orFail();
     res.json(product);
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
-export default { getProducts, getProductById };
+// Get Bestsellers Product
+
+// const getBestsellers = async (req, res, next) => {
+//   try {
+//     const products = await Product.aggregate([
+//       { $sort: { category: 1, sales: -1 } },
+//       { $group: { _id: "$category", doc_with_max_sales: {$first: "$$ROOT"} } },
+//       { $replaceWith: "$doc_with_max_sales" },
+//       { $match: {sales: {$gt: 0}}},
+//       { $project: {_id: 1, name: 1, images: 1, category: 1, description: 1 }},
+//       { $limit: 3 },
+//     ]);
+//     res.json(products);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+const getBestsellers = async (req, res, next) => {
+  try {
+    const products = await Product.aggregate([
+      { $sort: { category: 1, sales: -1 } },
+      {
+        $group: { _id: "$category", doc_with_max_sales: { $first: "$$ROOT" } },
+      },
+      { $replaceWith: "$doc_with_max_sales" },
+      { $match: { sales: { $gt: 0 } } },
+      { $project: { name: 1, images: 1, category: 1, description: 1 } },
+      { $limit: 3 },
+    ]);
+    res.json(products);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin Get Products
+
+const adminGetProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find({})
+      .sort({ category: 1 })
+      .select("name price category");
+    return res.json(products);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin Delete Product
+
+const adminDeleteProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id).orFail();
+    await product.deleteOne();
+    res.json({ message: "Product Delete successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin Add Product
+
+const adminCreateProduct = async (req, res, next) => {
+  try {
+    const product = new Product();
+    const { name, description, count, price, category, attributesTable } =
+      req.body;
+    product.name = name;
+    product.description = description;
+    product.count = count;
+    product.price = price;
+    product.category = category;
+
+    if (attributesTable?.length > 0) {
+      attributesTable.map((item) => {
+        product.attrs.push(item);
+      });
+    }
+    await product.save();
+    res.json({
+      message: "Product Created",
+      productId: product._id,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin Update Product
+
+const adminUpdateProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id).orFail();
+    const { name, description, count, price, category, attributesTable } =
+      req.body;
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.count = count || product.count;
+    product.price = price || product.price;
+    product.category = category || product.category;
+
+    if (attributesTable?.length > 0) {
+      product.attrs = [];
+      attributesTable.map((item) => {
+        product.attrs.push(item);
+      });
+    } else {
+      product.attrs = [];
+    }
+
+    await product.save();
+    res.json({ message: "Product Updated" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Upload File
+
+const adminUpload = async (req, res, next) => {
+  try {
+    if (!req.files || !!req.files.images === false) {
+      return res.status(404).send({ message: "No files were uploaded" });
+    }
+    if (Array.isArray(req.files.images)) {
+      res.send("You sent" + req.files.images.length + " images")
+    }else {
+      res.send("You sent only one image")
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default {
+  getProducts,
+  getProductById,
+  getBestsellers,
+  adminGetProducts,
+  adminDeleteProduct,
+  adminCreateProduct,
+  adminUpdateProduct,
+  adminUpload,
+};

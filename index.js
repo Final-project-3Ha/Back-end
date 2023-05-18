@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import fileUpload from "express-fileupload";
 import connectDB from "./config/db.js";
-import apiRoutes from './routes/apiRoutes.js'
+import apiRoutes from "./routes/apiRoutes.js";
 
 dotenv.config();
 
@@ -12,26 +13,25 @@ const PORT = process.env.PORT || 5000;
 await connectDB();
 
 const app = new express();
- 
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 app.use(express.json());
-
+app.use(fileUpload);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.use('/api', apiRoutes)
-
+app.use("/api", apiRoutes);
 
 // Error handlers
 
 app.use((error, req, res, next) => {
   console.error(error);
   next(error);
-})
+});
 
 app.use((error, req, res, next) => {
   res.status(500).json({
