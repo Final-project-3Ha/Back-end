@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Final-project-3Ha/Back-end#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "cookies": "^0.8.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

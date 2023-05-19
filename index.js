@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import fileUpload from "express-fileupload";
+import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import apiRoutes from "./routes/apiRoutes.js";
 
@@ -19,7 +20,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(fileUpload ());
+
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
