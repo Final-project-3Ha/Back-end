@@ -1,6 +1,8 @@
 import User from "../models/UserModel.js";
-import hashPassword from "../utils/hashPassword.js";
+import {hashPassword, comparePasswords} from "../utils/hashPassword.js";
 import generateAuthToken from "../utils/generateAuthToken.js";
+// import  comparePasswords  from "../utils/hashPassword.js";
+
 
 // get all users
 
@@ -66,4 +68,57 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-export default { getUsers, registerUser };
+// Login User
+
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password, doNotLogout } = req.body;
+    if (!(email && password)) {
+      return res.status(400).send("All inputs are required");
+    }
+    const user = await User.findOne({ email });
+    if (user && comparePasswords(password, user.password)) {
+      
+      let cookieParams = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      };
+
+      if (doNotLogout) {
+        cookieParams = { ...cookieParams, maxAge: 1000 * 60 * 60 * 24 * 7 }; // if I close the browser I can enter automatically on the website without logging after 7 days
+      }
+
+      return res
+        .cookie(
+          "access_token",
+          generateAuthToken(
+            user._id,
+            user.name,
+            user.lastName,
+            user.email,
+            user.isAdmin
+          ),
+          cookieParams
+        )
+        .json({
+          success: "user logged in successfully",
+          userLoggedIn: {
+            _id: user._id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            doNotLogout,
+          },
+        });
+    } else {
+      return res
+        .status(401)
+        .send("wrong credentials invalid username or password");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { getUsers, registerUser, loginUser };
