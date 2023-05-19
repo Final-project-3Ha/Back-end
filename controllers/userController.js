@@ -1,7 +1,11 @@
 import User from "../models/UserModel.js";
+import Review from "../models/ReviewModel.js";
+import Product from "../models/ProductModel.js";
 import { hashPassword, comparePasswords } from "../utils/hashPassword.js";
 import generateAuthToken from "../utils/generateAuthToken.js";
-// import  comparePasswords  from "../utils/hashPassword.js";
+// import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+const { ObjectId } = Types;
 
 // get all users
 
@@ -153,4 +157,112 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
-export default { getUsers, registerUser, loginUser, updateUserProfile };
+// get User
+
+const getUserProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).orFail();
+    return res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// A User Can Write A Review
+
+// const writeReview = async (req, res, next) => {
+//   try {
+//     // get comment, rating from Request.Body
+
+//     const { comment, rating } = req.body;
+
+//     // validate request
+
+//     if (!(comment && rating)) {
+//       return res.status(400).send("All inputs are required");
+//     }
+
+//     let reviewId = new ObjectId();
+//     await Review.create([
+//       {
+//         _id: reviewId,
+//         comment: comment,
+//         rating: Number(rating),
+//         user: {
+//           _id: req.user._id,
+//           // name: req.user.name + " " + req.user.lastName,
+//           name: `${req.user._id} ${req.user.lastName}`
+//         },
+//       },
+//     ]);
+//     res.send("Review created successfully");
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+const writeReview = async (req, res, next) => {
+  try {
+    // get comment, rating from request.body:
+    const { comment, rating } = req.body;
+    // validate request:
+    if (!(comment && rating)) {
+      return res.status(400).send("All inputs are required");
+    }
+
+    // create review id manually because it is needed also for saving in Product collection
+    let reviewId = new ObjectId();
+
+    await Review.create([
+      {
+        _id: reviewId,
+        comment: comment,
+        rating: Number(rating),
+        user: {
+          _id: req.user._id,
+          // name: req.user.name + " " + req.user.lastName,
+          name: `${req.user._id} ${req.user.lastName}`,
+        },
+      },
+    ]);
+
+    const product = await Product.findById(req.params.productId).populate(
+      "reviews"
+    );
+    // res.send(product);
+
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user._id.toString() === req.user._id.toString()
+    );
+    if (alreadyReviewed) {
+      return res.status(400).send("Product already reviewed ");
+    }
+
+    let prc = [...product.reviews];
+    prc.push({ rating: rating });
+    product.reviews.push(reviewId);
+    if (product.reviews.length === 1) {
+      product.rating = Number(rating);
+      product.reviewsNumber = 1;
+    } else {
+      product.reviewsNumber = product.reviews.length;
+      product.rating =
+        prc
+          .map((item) => Number(item.rating))
+          .reduce((sum, item) => sum + item, 0) / product.reviews.length;
+    }
+    await product.save();
+    return res.send("review created");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default {
+  getUsers,
+  registerUser,
+  loginUser,
+  updateUserProfile,
+  getUserProfile,
+  writeReview,
+};

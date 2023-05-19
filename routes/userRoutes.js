@@ -11,9 +11,12 @@ router.post("/login", userController.loginUser);
 router.use(verifyIsLoggedIn);
 
 router.put("/profile", userController.updateUserProfile);
+router.get("/profile/:id", userController.getUserProfile);
+router.post("/review/:productId", userController.writeReview);
 
 
 // admin routes
+
 router.use(verifyIsAdmin);
 
 router.get("/", userController.getUsers);
