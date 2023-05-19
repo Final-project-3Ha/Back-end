@@ -20,6 +20,9 @@ router.post("/review/:productId", userController.writeReview);
 router.use(verifyIsAdmin);
 
 router.get("/", userController.getUsers);
+router.get("/:id", userController.getUser);
+router.put("/:id", userController.updateUser);
+router.delete("/:id", userController.deleteUser);
 
 
 

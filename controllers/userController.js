@@ -22,7 +22,7 @@ const getUsers = async (req, res, next) => {
 
 const registerUser = async (req, res, next) => {
   try {
-    const { name, lastName, email, password } = req.body;
+    const { name, lastName, email, password, isAdmin } = req.body;
     if (!(name && lastName && email && password)) {
       return res.status(400).send("All inputs are required");
     }
@@ -37,6 +37,7 @@ const registerUser = async (req, res, next) => {
         lastName,
         email: email.toLowerCase(),
         password: hashedPassword,
+        isAdmin,
       });
       res
         .cookie(
@@ -157,7 +158,7 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
-// get User
+// get User's Profile information for each user
 
 const getUserProfile = async (req, res, next) => {
   try {
@@ -168,38 +169,7 @@ const getUserProfile = async (req, res, next) => {
   }
 };
 
-// A User Can Write A Review
-
-// const writeReview = async (req, res, next) => {
-//   try {
-//     // get comment, rating from Request.Body
-
-//     const { comment, rating } = req.body;
-
-//     // validate request
-
-//     if (!(comment && rating)) {
-//       return res.status(400).send("All inputs are required");
-//     }
-
-//     let reviewId = new ObjectId();
-//     await Review.create([
-//       {
-//         _id: reviewId,
-//         comment: comment,
-//         rating: Number(rating),
-//         user: {
-//           _id: req.user._id,
-//           // name: req.user.name + " " + req.user.lastName,
-//           name: `${req.user._id} ${req.user.lastName}`
-//         },
-//       },
-//     ]);
-//     res.send("Review created successfully");
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+// Write A Review for a Product
 
 const writeReview = async (req, res, next) => {
   try {
@@ -258,6 +228,50 @@ const writeReview = async (req, res, next) => {
   }
 };
 
+// Only  Admin get User by his ID
+
+const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select("name lastName email isAdmin")
+      .orFail();
+    return res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// only Admin can update the role of other users "isAdmin false or true" 
+
+const updateUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).orFail();
+
+    user.name = req.body.name || user.name;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin || user.isAdmin;
+
+    await user.save();
+
+    res.send("User updated successfully");
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Delete user
+
+const deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).orFail()
+    await user.deleteOne();
+    res.send('User deleted successfully')
+  } catch (err) {
+    next (err);  
+  }
+}
+
 export default {
   getUsers,
   registerUser,
@@ -265,4 +279,7 @@ export default {
   updateUserProfile,
   getUserProfile,
   writeReview,
+  getUser,
+  updateUser,
+  deleteUser
 };
