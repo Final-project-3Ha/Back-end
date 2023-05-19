@@ -12,7 +12,7 @@ const OrderSchema = new Schema(
       
     },
 
-    OrderTotal: {
+    orderTotal: {
       itemsCount: {
         type: Number,
         required: true,
@@ -56,6 +56,11 @@ const OrderSchema = new Schema(
         },
       },
     ],
+
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
 
     transactionResult: {
       status: {

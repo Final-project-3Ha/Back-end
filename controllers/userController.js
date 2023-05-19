@@ -3,7 +3,6 @@ import Review from "../models/ReviewModel.js";
 import Product from "../models/ProductModel.js";
 import { hashPassword, comparePasswords } from "../utils/hashPassword.js";
 import generateAuthToken from "../utils/generateAuthToken.js";
-// import { ObjectId } from "mongoose";
 import { Types } from "mongoose";
 const { ObjectId } = Types;
 

@@ -2,6 +2,8 @@ import express from "express";
 const router = express.Router();
 import productController from "../controllers/ProductController.js";
 import {verifyIsLoggedIn, verifyIsAdmin} from '../middleware/verifyAuthToken.js'
+
+
 router.get("/", productController.getProducts);
 router.get("/category/:categoryName", productController.getProducts);
 router.get("/category/:categoryName/search/:searchQuery", productController.getProducts);
