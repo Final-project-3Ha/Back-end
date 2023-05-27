@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "dev": "nodemon index"
+    "index-prod": "node index.js",
+    "index-dev": "nodemon --exec babel-node index.js",
+    "client": "npm start --prefix ../Front-end/ecommerce",
+    "dev": "concurrently --kill-others-on-fail \"npm run index-dev\" \"npm run client\"",
+    "seed:data": "node seeder/seeder",
+    "seed:data-d": "node seeder/seeder -d"
   },
   "repository": {
     "type": "git",
@@ -34,6 +38,9 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "@babel/node": "^7.22.1",
+    "concurrently": "^8.0.1",
     "nodemon": "^2.0.22"
   }
 }
