@@ -168,7 +168,7 @@ const getBestsellers = async (req, res, next) => {
       },
       { $replaceWith: "$doc_with_max_sales" },
       { $match: { sales: { $gt: 0 } } },
-      { $project: { name: 1, images: 1, category: 1, description: 1 } },
+      { $project: { _id: 1, name: 1, images: 1, category: 1, description: 1 } },
       { $limit: 3 },
     ]);
     res.json(products);
@@ -263,9 +263,8 @@ const adminUpdateProduct = async (req, res, next) => {
 
 const adminUpload = async (req, res, next) => {
   try {
-    console.log("entered try");
-    if (!req.files || !!req.files.images === false) {
-      return res.status(404).send("No files were uploaded");
+    if (!req.files || !req.files.images) {
+      return res.status(400).send("No files were uploaded.");
     }
 
     const validateResult = imageValidate(req.files.images);
@@ -273,19 +272,14 @@ const adminUpload = async (req, res, next) => {
       return res.status(400).send(validateResult.error);
     }
 
-    // const path = require("path");
     const uploadDirectory = path.resolve(
       __dirname,
-      "../../frontend",
-      "public",
-      "images",
-      "products"
+      "../../Front-end/ecommerce/public/images/products"
     );
 
     let product = await Product.findById(req.query.productId).orFail();
 
     let imagesTable = [];
-
     if (Array.isArray(req.files.images)) {
       imagesTable = req.files.images;
     } else {
@@ -293,7 +287,7 @@ const adminUpload = async (req, res, next) => {
     }
 
     for (let image of imagesTable) {
-      var fileName = uuidv4 + path.extname(image.name);
+      var fileName = uuidv4() + path.extname(image.name);
       var uploadPath = uploadDirectory + "/" + fileName;
       product.images.push({ path: "/images/products/" + fileName });
       image.mv(uploadPath, function (err) {
@@ -313,8 +307,9 @@ const adminUpload = async (req, res, next) => {
 
 const adminDeleteProductImage = async (req, res, next) => {
   try {
-    const imagePath = decodeURLComponent(req.params.imagePath);
-    const finalPath = path.resolve("../frontend/public") + imagePath;
+    const imagePath = decodeURIComponent(req.params.imagePath);
+    const finalPath = path.resolve("../Front-end/ecommerce/public") + imagePath;
+
     fs.unlink(finalPath, (err) => {
       if (err) {
         res.status(500).send(err);
