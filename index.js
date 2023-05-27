@@ -32,22 +32,23 @@ app.use("/api", apiRoutes);
 // Error handlers
 
 app.use((error, req, res, next) => {
-  console.error(error);
+  if (process.env.NODE_ENV === "development") {
+    console.error(error);
+  }
   next(error);
 });
 
 app.use((error, req, res, next) => {
-  res.status(500).json({
-    message: error.message,
-    stack: error.stack,
-  });
-});
-
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500).send({
-    success: false,
-    message: err.message,
-  });
+  if (process.env.NODE_ENV === "development") {
+    res.status(500).json({
+      message: error.message,
+      stack: error.stack,
+    });
+  } else {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 
 app.listen(
