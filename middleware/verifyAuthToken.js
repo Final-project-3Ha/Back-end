@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const verifyIsLoggedIn = (req, res, next) => {
-
-  
+export const verifyIsLoggedIn = (req, res, next) => {
   try {
     const token = req.cookies.access_token;
     if (!token) {
@@ -14,7 +12,7 @@ const verifyIsLoggedIn = (req, res, next) => {
       req.user = decoded;
       next();
     } catch (err) {
-      return res.status(401).send("Unauthorized. Invalid token");
+      return res.status(401).send("Unauthorized. Invalid Token");
     }
   } catch (err) {
     next(err);
@@ -23,10 +21,7 @@ const verifyIsLoggedIn = (req, res, next) => {
 
 // Verify Is Admin
 
-const verifyIsAdmin = (req, res, next) => {
-
-
-
+export const verifyIsAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
@@ -34,4 +29,4 @@ const verifyIsAdmin = (req, res, next) => {
   }
 };
 
-export { verifyIsLoggedIn, verifyIsAdmin };
+
