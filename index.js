@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import fileUpload from "express-fileupload";
@@ -54,4 +55,10 @@ app.use((error, req, res, next) => {
 app.listen(
   PORT,
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)
+);
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", 
+  })
 );
