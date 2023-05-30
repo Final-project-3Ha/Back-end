@@ -28,7 +28,7 @@ const registerUser = async (req, res, next) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).send("User already exists");
+      return res.status(400).send("user exists");
     } else {
       const hashedPassword = hashPassword(password);
       const user = await User.create({
@@ -56,7 +56,7 @@ const registerUser = async (req, res, next) => {
         )
         .status(201)
         .json({
-          success: "User created successfully",
+          success: "User created",
           userCreated: {
             _id: user._id,
             name: user.name,
