@@ -59,6 +59,9 @@ app.listen(
 
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+    origin: [
+      "https://monueh-shop.onrender.com",
+      "https://monuehshop.vercel.app",
+    ],
   })
 );
