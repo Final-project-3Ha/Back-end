@@ -2,7 +2,8 @@ import express from "express";
 const router = express.Router();
 import productController from "../controllers/ProductController.js";
 import {verifyIsLoggedIn, verifyIsAdmin} from '../middleware/verifyAuthToken.js'
-
+import cors from "cors";
+router.use(cors());
 
 router.get("/", productController.getProducts);
 router.get("/category/:categoryName", productController.getProducts);

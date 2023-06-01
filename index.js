@@ -25,6 +25,7 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
+app.use("/api", apiRoutes);
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -38,7 +39,6 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.use("/api", apiRoutes);
 
 // Error handlers
 

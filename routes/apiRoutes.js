@@ -6,6 +6,9 @@ import categoryRoutes from "./categoryRoutes.js";
 import userRoutes from "./userRoutes.js";
 import orderRoutes from "./orderRoutes.js";
 // router.put("/block/:id", authMiddleware, isAdmin, authControllers.blockUser);
+const router = express.Router();
+import cors from "cors";
+router.use(cors());
 
 app.get("/logout", (req, res) => {
   return res.clearCookie("access_token").send("access token cleared");

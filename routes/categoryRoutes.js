@@ -2,7 +2,8 @@ import express from "express";
 const router = express.Router();
 import categoryController from "../controllers/categoryController.js";
 import {verifyIsLoggedIn, verifyIsAdmin} from '../middleware/verifyAuthToken.js'
-
+import cors from "cors";
+router.use(cors());
 
 router.use(verifyIsLoggedIn)
 router.use(verifyIsAdmin)
