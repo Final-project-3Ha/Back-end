@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "index-prod": "node index.js",
     "index-dev": "nodemon --exec babel-node index.js",
-    "client": "npm start --prefix ../Front-end/ecommerce",
+    "client": "npm start --prefix ../deployment-2",
     "dev": "concurrently --kill-others-on-fail \"npm run index-dev\" \"npm run client\"",
     "seed:data": "node seeder/seeder",
     "seed:data-d": "node seeder/seeder -d"
