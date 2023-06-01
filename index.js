@@ -15,16 +15,16 @@ const PORT = process.env.PORT || 5000;
 await connectDB();
 
 const app = new express();
-
-app.use(
-  cors({
-    origin: "*",
-    // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  })
-);
+app.use(cors({}))
+// app.use(
+//   cors({
+//     origin: "*",
+//     // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true,
+//     preflightContinue: false,
+//     optionsSuccessStatus: 204,
+//   })
+// );
 app.use("/api", apiRoutes);
 
 if (process.env.NODE_ENV === "development") {
