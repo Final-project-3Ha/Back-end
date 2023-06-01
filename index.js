@@ -16,13 +16,19 @@ await connectDB();
 
 const app = new express();
 
+app.use(
+  cors({
+    origin: "https://monuehshop.vercel.app",
+  })
+);
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 app.use(express.json());
-app.use(cookieParser())
-app.use(fileUpload ());
+app.use(cookieParser());
+app.use(fileUpload());
 
 app.get("/", (req, res) => {
   res.send("API is running...");
@@ -55,10 +61,4 @@ app.use((error, req, res, next) => {
 app.listen(
   PORT,
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)
-);
-
-app.use(
-  cors({
-    origin: "https://monuehshop.vercel.app",
-  })
 );
