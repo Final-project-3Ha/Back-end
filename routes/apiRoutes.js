@@ -34,7 +34,10 @@ app.get("/get-token", (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      domain: "monuehshop.vercel.app",
+      domain: [
+        "monuehshop.vercel.app",
+        "monuehshop.onrender.com",
+      ],
     });
 
     return res.json({ token: decoded.name, isAdmin: decoded.isAdmin });
