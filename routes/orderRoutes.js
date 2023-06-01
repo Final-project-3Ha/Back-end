@@ -2,8 +2,8 @@ import express from "express";
 const router = express.Router();
 import orderController from "../controllers/orderController.js";
 import {verifyIsLoggedIn, verifyIsAdmin} from '../middleware/verifyAuthToken.js'
-import cors from "cors";
-router.use(cors());
+// import cors from "cors";
+// router.use(cors());
 
 // user routes 
 router.use(verifyIsLoggedIn);
