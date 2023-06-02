@@ -45,4 +45,9 @@ app.listen(
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)
 );
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://monuehshop.vercel.app",
+  })
+);
+
