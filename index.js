@@ -45,8 +45,4 @@ app.listen(
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)
 );
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+app.use(cors());
