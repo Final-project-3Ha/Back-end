@@ -232,6 +232,33 @@ const adminCreateProduct = async (req, res, next) => {
 
 // Admin Update Product
 
+// const adminUpdateProduct = async (req, res, next) => {
+//   try {
+//     const product = await Product.findById(req.params.id).orFail();
+//     const { name, description, count, price, category, attributesTable } =
+//       req.body;
+//     product.name = name || product.name;
+//     product.description = description || product.description;
+//     product.count = count || product.count;
+//     product.price = price || product.price;
+//     product.category = category || product.category;
+
+//     if (attributesTable?.length > 0) {
+//       product.attrs = [];
+//       attributesTable.map((item) => {
+//         product.attrs.push(item);
+//       });
+//     } else {
+//       product.attrs = [];
+//     }
+
+//     await product.save();
+//     res.json({ message: "Product Updated" });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 const adminUpdateProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).orFail();
