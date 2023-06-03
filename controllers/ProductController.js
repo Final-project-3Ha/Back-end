@@ -261,6 +261,9 @@ const adminUpdateProduct = async (req, res, next) => {
 
 // Upload File
 
+const __filename = path.basename(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 const adminUpload = async (req, res, next) => {
   try {
     if (!req.files || !req.files.images) {
@@ -273,8 +276,7 @@ const adminUpload = async (req, res, next) => {
     }
 
     const uploadDirectory = path.resolve(
-      __dirname,
-      "../../Front-end/ecommerce/public/images/products"
+      path.join(__dirname, "../../deployment-2/public/images/products")
     );
 
     let product = await Product.findById(req.query.productId).orFail();
@@ -288,8 +290,8 @@ const adminUpload = async (req, res, next) => {
 
     for (let image of imagesTable) {
       var fileName = uuidv4() + path.extname(image.name);
-      var uploadPath = uploadDirectory + "/" + fileName;
-      product.images.push({ path: "/images/products/" + fileName });
+     var uploadPath = path.join(uploadDirectory, fileName);
+     product.images.push({ path: "/images/products/" + fileName });
       image.mv(uploadPath, function (err) {
         if (err) {
           return res.status(500).send(err);
@@ -308,8 +310,10 @@ const adminUpload = async (req, res, next) => {
 const adminDeleteProductImage = async (req, res, next) => {
   try {
     const imagePath = decodeURIComponent(req.params.imagePath);
-    const finalPath = path.resolve("../Front-end/ecommerce/public") + imagePath;
-
+     const finalPath = path.join(
+       path.resolve(path.join(__dirname, "../../deployment-2/public")),
+       imagePath
+     );
     fs.unlink(finalPath, (err) => {
       if (err) {
         res.status(500).send(err);
