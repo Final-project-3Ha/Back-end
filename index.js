@@ -17,6 +17,13 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());
+
+app.use(
+  cors({
+    origin: ["https://monuehshop.onrender.com", "http://localhost:3000"],
+  })
+);
+
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
@@ -45,8 +52,15 @@ app.listen(
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${PORT}!!!`)
 );
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//   })
+// );
+
+
+// app.use(
+//   cors({
+//     origin: "https://monuehshop.onrender.com",
+//   })
+// );
