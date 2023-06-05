@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "repository": {
@@ -16,7 +16,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/Final-project-3Ha/Back-end/issues"
   },
