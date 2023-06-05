@@ -20,7 +20,9 @@ app.use(fileUpload());
 
 app.use(
   cors({
-    origin: ["https://monuehshop.onrender.com", "http://localhost:3000"],
+    // origin: ["https://monuehshop.onrender.com", "http://localhost:3000"],
+    origin: true
+    
   })
 );
 

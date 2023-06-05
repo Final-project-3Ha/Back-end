@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import Review from "./ReviewModel.js";
 
-const imageSchema = mongoose.Schema({
-    path: {
-        type: String,
-        required: true,
-    },
-})
+// const imageSchema = mongoose.Schema({
+//     path: {
+//         type: String,
+//         required: true,
+//     },
+// })
 
 
 const { Schema, model } = mongoose;
@@ -64,7 +64,8 @@ const ProductSchema = new Schema(
       },
     ],
 
-    images: [imageSchema],
+    images: [String],
+    
 
     reviews: [{
       

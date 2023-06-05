@@ -214,10 +214,11 @@ const writeReview = async (req, res, next) => {
       product.reviewsNumber = 1;
     } else {
       product.reviewsNumber = product.reviews.length;
-      product.rating =
+     let ratingCalc =
         prc
           .map((item) => Number(item.rating))
           .reduce((sum, item) => sum + item, 0) / product.reviews.length;
+          product.rating = Math.round(ratingCalc)
     }
     await product.save();
     return res.send("review created");
@@ -248,11 +249,11 @@ const updateUser = async (req, res, next) => {
     user.name = req.body.name || user.name;
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
-    user.isAdmin = req.body.isAdmin || user.isAdmin;
+    user.isAdmin = req.body.isAdmin 
 
     await user.save();
 
-    res.send("User updated successfully");
+    res.send("User updated");
   } catch (err) {
     next(err);
   }
@@ -264,7 +265,7 @@ const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).orFail()
     await user.deleteOne();
-    res.send('User deleted successfully')
+    res.send('User deleted')
   } catch (err) {
     next (err);  
   }
