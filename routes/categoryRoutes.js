@@ -5,9 +5,9 @@ import {verifyIsLoggedIn, verifyIsAdmin} from '../middleware/verifyAuthToken.js'
 // import cors from "cors";
 // router.use(cors());
 
+router.get("/", categoryController.getCategories);
 router.use(verifyIsLoggedIn)
 router.use(verifyIsAdmin)
-router.get("/", categoryController.getCategories);
 router.post("/", categoryController.newCategory)
 router.delete("/:category", categoryController.deleteCategory);
 router.post("/attr", categoryController.saveAttr);
