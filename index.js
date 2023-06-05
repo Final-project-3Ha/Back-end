@@ -24,6 +24,7 @@ app.use(
       "https://monuehshop.onrender.com",
       "http://localhost:3000",
       "https://monuehshop.vercel.app",
+      "https://monueh.vercel.app/user/my-orders",
     ],
   })
 );
